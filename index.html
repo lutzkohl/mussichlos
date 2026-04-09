@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mussIchLos — Vertretungsplan-Alarm</title>
+  <meta name="description" content="Kriegst du morgen Vertretung? Wir checken das täglich um 19 Uhr und schicken dir ne Mail." />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <nav>
+    <span class="logo">mussIchLos<span class="dot">.</span></span>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <h1>Weißt du schon, ob du morgen Vertretung hast?</h1>
+      <p class="hero-sub">
+        Trag dich ein. Wir checken jeden Abend um 19&nbsp;Uhr deinen Vertretungsplan
+        und schicken dir eine Mail — wenn was ist.
+      </p>
+    </section>
+
+    <section class="form-section">
+      <div class="card" id="form-card">
+        <form id="registration-form" novalidate>
+          <div class="field">
+            <label for="email">Deine E-Mail</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="du@beispiel.de"
+              autocomplete="email"
+              required
+            />
+          </div>
+
+          <div class="field">
+            <label for="schule">Deine Schule</label>
+            <select id="schule" name="schule" required>
+              <option value="" disabled selected>Schule auswählen...</option>
+              <option
+                value="CGJ|Carl-Gotthard-Jagemann-Gymnasium|https://www.c-g-j.de/aktuelles-und-termine/vertretungsplan/"
+              >
+                Carl-Gotthard-Jagemann-Gymnasium (Meiningen)
+              </option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="klasse">Deine Klasse</label>
+            <input
+              type="text"
+              id="klasse"
+              name="klasse"
+              placeholder="z.B. 8b"
+              maxlength="10"
+              required
+            />
+            <span class="field-hint">Genau so wie im Vertretungsplan</span>
+          </div>
+
+          <button type="submit" id="submit-btn">
+            <span id="btn-text">Loslegen</span>
+            <span id="btn-spinner" class="spinner hidden"></span>
+          </button>
+
+          <p class="privacy-hint">
+            Deine E-Mail wird verschlüsselt gespeichert und nicht weitergegeben.
+            <a href="#datenschutz">Mehr dazu</a>
+          </p>
+        </form>
+
+        <div id="form-success" class="hidden">
+          <div class="success-icon">&#10003;</div>
+          <h2>Fast geschafft!</h2>
+          <p>
+            Wir haben dir eine Bestätigungs-Mail geschickt. Klick auf den Link darin —
+            danach bist du dabei.
+          </p>
+        </div>
+
+        <div id="form-error" class="hidden">
+          <p class="error-msg" id="error-text">Da ist was schiefgelaufen. Versuch's nochmal.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="how-it-works">
+      <h2>So läuft das ab</h2>
+      <ol class="steps">
+        <li>
+          <span class="step-num">1</span>
+          <div>
+            <strong>Eintragen</strong>
+            <p>E-Mail, Schule und Klasse eingeben. Dauert 20 Sekunden.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <div>
+            <strong>Bestätigen</strong>
+            <p>Kurz die E-Mail bestätigen, damit wir wissen, dass sie dir gehört.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <div>
+            <strong>Zurücklehnen</strong>
+            <p>
+              Jeden Abend um 19&nbsp;Uhr checken wir den Plan.
+              Wenn du Vertretung hast, kriegst du eine Mail.
+            </p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="faq" id="datenschutz">
+      <h2>Noch Fragen?</h2>
+      <details>
+        <summary>Was macht ihr mit meiner E-Mail?</summary>
+        <p>
+          Nur eines: dir Bescheid geben, wenn du Vertretung hast.
+          Deine Adresse ist nicht öffentlich einsehbar und wird nicht verkauft oder weitergegeben.
+          Du kannst dich jederzeit abmelden.
+        </p>
+      </details>
+      <details>
+        <summary>Wie melde ich mich wieder ab?</summary>
+        <p>
+          Jede Benachrichtigungs-Mail hat einen Abmelden-Link ganz unten.
+          Ein Klick reicht — keine Umfrage, kein Stress.
+        </p>
+      </details>
+      <details>
+        <summary>Funktioniert das auch am Wochenende?</summary>
+        <p>
+          Wir checken nur Montag bis Freitag. Am Wochenende kannst du eh ausschlafen.
+        </p>
+      </details>
+      <details>
+        <summary>Meine Schule ist nicht dabei. Was jetzt?</summary>
+        <p>
+          Schreib uns: <a href="mailto:hallo@mussichllos.de">hallo@mussichllos.de</a>.
+          Wenn der Vertretungsplan deiner Schule online steht, kriegen wir das hin.
+        </p>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      Gemacht von Schülern, für Schüler &middot;
+      <a href="mailto:hallo@mussichllos.de">Kontakt</a> &middot;
+      <a href="datenschutz.html">Datenschutz</a> &middot;
+      <a href="impressum.html">Impressum</a>
+    </p>
+  </footer>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

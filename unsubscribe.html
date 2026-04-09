@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abgemeldet — mussIchLos</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">mussIchLos<span class="dot">.</span></a>
+  </nav>
+
+  <main class="centered">
+    <div class="card status-card" id="loading-state">
+      <div class="spinner"></div>
+      <p>Abmelden...</p>
+    </div>
+
+    <div class="card status-card hidden" id="success-state">
+      <div class="success-icon" style="background: #ef4444;">&#10005;</div>
+      <h1>Abgemeldet.</h1>
+      <p>
+        Du bekommst keine Benachrichtigungen mehr.
+        Falls du dich verklickt hast, kannst du dich jederzeit wieder eintragen.
+      </p>
+      <a href="index.html" class="btn-secondary">Wieder eintragen</a>
+    </div>
+
+    <div class="card status-card hidden" id="error-state">
+      <h1>Hmm, das hat nicht geklappt.</h1>
+      <p>
+        Entweder bist du schon abgemeldet, oder der Link ist abgelaufen.
+        Falls du noch Mails bekommst, schreib uns:
+        <a href="mailto:hallo@mussichllos.de">hallo@mussichllos.de</a>
+      </p>
+      <a href="index.html" class="btn-secondary">Zurück zur Startseite</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Gemacht von Schülern, für Schüler</p>
+  </footer>
+
+  <script src="assets/config.js"></script>
+  <script>
+    (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('token');
+
+      const loadingEl = document.getElementById('loading-state');
+      const successEl = document.getElementById('success-state');
+      const errorEl = document.getElementById('error-state');
+
+      if (!token) {
+        loadingEl.classList.add('hidden');
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/functions/v1/unsubscribe?token=${encodeURIComponent(token)}`,
+          { method: 'POST' }
+        );
+        loadingEl.classList.add('hidden');
+        if (res.ok) {
+          successEl.classList.remove('hidden');
+        } else {
+          errorEl.classList.remove('hidden');
+        }
+      } catch {
+        loadingEl.classList.add('hidden');
+        errorEl.classList.remove('hidden');
+      }
+    })();
+  </script>
+</body>
+</html>
