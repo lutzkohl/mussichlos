@@ -250,7 +250,7 @@ def main():
         supabase.table('registrations')
         .select('id, email, klasse, school_name, school_url, unsubscribe_token, last_notified_date')
         .eq('verified', True)
-        .neq('last_notified_date', today)
+        .or_(f'last_notified_date.neq.{today},last_notified_date.is.null')
         .execute()
     )
 
