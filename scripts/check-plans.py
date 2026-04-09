@@ -84,6 +84,12 @@ def download_pdf(pdf_url: str) -> bytes | None:
     try:
         resp = requests.get(pdf_url, timeout=30, headers={'User-Agent': 'mussIchLos-Bot/1.0'})
         resp.raise_for_status()
+        content_type = resp.headers.get('Content-Type', '')
+        print(f"  Content-Type: {content_type} | Größe: {len(resp.content):,} Bytes | Anfang: {resp.content[:8]}")
+        if b'%PDF' not in resp.content[:8]:
+            print(f"  [WARN] Antwort beginnt nicht mit %PDF — kein echtes PDF!")
+            print(f"  Inhalt-Anfang: {resp.content[:200]}")
+            return None
         return resp.content
     except requests.RequestException as e:
         print(f"  [FEHLER] PDF nicht ladbar: {pdf_url} — {e}")
