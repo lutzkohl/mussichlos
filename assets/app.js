@@ -1,6 +1,15 @@
 (() => {
   'use strict';
 
+  // Supabase gibt manchmal einen "sb_publishable_..." Key zurück —
+  // die REST API braucht nur den JWT-Teil (eyJ...)
+  function extractJWT(key) {
+    if (!key.startsWith('sb_publishable_')) return key;
+    const idx = key.indexOf('eyJ');
+    return idx !== -1 ? key.slice(idx) : key;
+  }
+  const SUPABASE_JWT = extractJWT(SUPABASE_ANON_KEY);
+
   const form = document.getElementById('registration-form');
   const submitBtn = document.getElementById('submit-btn');
   const btnText = document.getElementById('btn-text');
@@ -43,8 +52,8 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'apikey': SUPABASE_JWT,
+          'Authorization': `Bearer ${SUPABASE_JWT}`,
           'Prefer': 'return=minimal',
         },
         body: JSON.stringify({ email, klasse, school_name: schoolName, school_url: schoolUrl }),
@@ -64,8 +73,8 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'apikey': SUPABASE_JWT,
+          'Authorization': `Bearer ${SUPABASE_JWT}`,
         },
         body: JSON.stringify({ email }),
       });
