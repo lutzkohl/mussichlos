@@ -2,10 +2,10 @@ name: Vertretungsplan-Check
 
 on:
   schedule:
-    # 17:00 UTC = 19:00 CEST (Sommer)
-    - cron: '0 17 * * 1-5'
-    # 18:00 UTC = 19:00 CET (Winter)
-    - cron: '0 18 * * 1-5'
+    # 17:00 UTC = 19:00 CEST (Sommer) — täglich, auch Wochenende
+    - cron: '0 17 * * *'
+    # 18:00 UTC = 19:00 CET (Winter) — täglich, auch Wochenende
+    - cron: '0 18 * * *'
   # Manuell auslösen zum Testen
   workflow_dispatch:
 
