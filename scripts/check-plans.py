@@ -36,10 +36,12 @@ resend.api_key = RESEND_API_KEY
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 # DST-Guard: Skript läuft zweimal täglich (17 + 18 Uhr UTC).
-# Nur der Run zur richtigen Berliner Zeit (18:50–19:15) wird wirklich ausgeführt.
+# Nur der Run zur richtigen Berliner Zeit wird ausgeführt.
+# Bei manuellem Trigger (workflow_dispatch) wird der Guard übersprungen.
 BERLIN = zoneinfo.ZoneInfo('Europe/Berlin')
 now_berlin = datetime.datetime.now(BERLIN)
-if not (18 <= now_berlin.hour <= 19):
+is_manual = os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch'
+if not is_manual and not (18 <= now_berlin.hour <= 19):
     print(f"DST-Guard: Berliner Zeit ist {now_berlin.strftime('%H:%M')} — kein Benachrichtigungszeitfenster. Abbruch.")
     sys.exit(0)
 
