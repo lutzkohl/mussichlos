@@ -62,15 +62,23 @@ def find_pdf_url(page_url: str) -> str | None:
     base_origin = f"{urlparse(page_url).scheme}://{urlparse(page_url).netloc}"
     soup = BeautifulSoup(resp.text, 'html.parser')
 
+    # Strategie 1: Link-href endet auf .pdf (zuverlässigste Methode)
+    for a in soup.find_all('a', href=True):
+        href = a['href']
+        if href.lower().endswith('.pdf'):
+            full_url = urljoin(page_url, href)
+            if full_url.startswith(base_origin):
+                print(f"  PDF-Link gefunden (via href): {full_url}")
+                return full_url
+
+    # Strategie 2: Linktext enthält "vertretungsplan" UND href enthält Dateiname
     for a in soup.find_all('a', href=True):
         href = a['href']
         link_text = a.get_text(strip=True).lower()
-        href_lower = href.lower()
-
-        if 'vertretungsplan' in link_text or href_lower.endswith('.pdf'):
+        if 'vertretungsplan' in link_text and '.' in href.split('/')[-1]:
             full_url = urljoin(page_url, href)
-            # Sicherheit: nur Links auf der gleichen Domain folgen
-            if full_url.startswith(base_origin):
+            if full_url.startswith(base_origin) and full_url != page_url:
+                print(f"  PDF-Link gefunden (via Text): {full_url}")
                 return full_url
 
     print(f"  [WARN] Kein PDF-Link gefunden auf {page_url}")
