@@ -104,6 +104,39 @@ def download_pdf(pdf_url: str) -> bytes | None:
         return None
 
 
+MONATE = {
+    'januar': 1, 'februar': 2, 'märz': 3, 'april': 4,
+    'mai': 5, 'juni': 6, 'juli': 7, 'august': 8,
+    'september': 9, 'oktober': 10, 'november': 11, 'dezember': 12,
+}
+
+def extract_plan_date(pdf_bytes: bytes) -> datetime.date | None:
+    """Liest das Plandatum aus der ersten PDF-Seite (z.B. 'Montag, 20. April 2026')."""
+    pattern = re.compile(
+        r'(?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag),\s*'
+        r'(\d{1,2})\.\s*(\w+)\s+(\d{4})',
+        re.IGNORECASE,
+    )
+    try:
+        with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
+            text = pdf.pages[0].extract_text() or ''
+            m = pattern.search(text)
+            if m:
+                day, month_str, year = int(m.group(1)), m.group(2).lower(), int(m.group(3))
+                month = MONATE.get(month_str)
+                if month:
+                    return datetime.date(year, month, day)
+    except Exception:
+        pass
+    return None
+
+
+def plan_date_is_soon(plan_date: datetime.date, max_days: int = 3) -> bool:
+    """Gibt True zurück wenn das Plandatum innerhalb der nächsten max_days Tage liegt."""
+    delta = (plan_date - datetime.date.today()).days
+    return 0 <= delta <= max_days
+
+
 def extract_class_entries(pdf_bytes: bytes, klasse: str) -> list[str]:
     """
     Parst das PDF und gibt alle Vertretungs-Einträge für die Klasse zurück.
@@ -292,6 +325,15 @@ def main():
         if not pdf_bytes:
             continue
         print(f"  PDF geladen ({len(pdf_bytes):,} Bytes)")
+
+        plan_date = extract_plan_date(pdf_bytes)
+        if plan_date:
+            print(f"  Plandatum: {plan_date.strftime('%d.%m.%Y')}")
+            if not plan_date_is_soon(plan_date):
+                print(f"  Plandatum liegt zu weit in der Zukunft (Ferien?) — übersprungen.")
+                continue
+        else:
+            print(f"  Plandatum nicht erkannt — wird trotzdem geprüft.")
 
         for reg in regs:
             klasse = reg['klasse']
